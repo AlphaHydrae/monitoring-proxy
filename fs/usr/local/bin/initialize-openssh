@@ -1,0 +1,15 @@
+#!/bin/sh
+
+log () {
+  timestamp="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+  echo "[$timestamp] [ssh] $@"
+}
+
+log "Generating host keys..."
+/usr/bin/ssh-keygen -A
+log "Generated host keys:"
+ls -1 /etc/ssh/ssh_host_*
+
+log "Testing configuration..."
+/usr/sbin/sshd -T
+log "Configuration is valid."

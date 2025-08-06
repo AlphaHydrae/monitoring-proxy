@@ -1,0 +1,25 @@
+#!/command/with-contenv sh
+log () {
+  timestamp="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+  echo "[$timestamp] [monitoring] $@"
+}
+
+authorized_keys="/home/monitoring/.ssh/authorized_keys"
+monitoring_proxy_public_key="$MONITORING_PROXY_PUBLIC_KEY"
+
+if [ -z "$monitoring_proxy_public_key" ]; then
+  log "No public key provided with \$MONITORING_PROXY_PUBLIC_KEY"
+  exit 0
+fi
+
+if [ -f "$authorized_keys" ] && cat "$authorized_keys" | grep "$monitoring_proxy_public_key" 1>/dev/null 2>/dev/null; then
+  log "$authorized_keys already contains the public key provided with \$MONITORING_PROXY_PUBLIC_KEY"
+  exit 0
+fi
+
+if [ -n "$(printenv MONITORING_PROXY_PUBLIC_KEY)" ]; then
+  log "Adding public key provided with \$MONITORING_PROXY_PUBLIC_KEY to $authorized_keys..."
+  echo "$MONITORING_PROXY_PUBLIC_KEY" >> /home/monitoring/.ssh/authorized_keys
+  log "$authorized_keys now contains:"
+  cat /home/monitoring/.ssh/authorized_keys
+fi

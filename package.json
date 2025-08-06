@@ -1,0 +1,32 @@
+{
+  "name": "monitoring-proxy",
+  "version": "1.0.0",
+  "description": "Docker image to run a proxy container for a monitoring system based on Prometheus and the Prometheus Node Exporter.",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/sqrs/monitoring-proxy.git"
+  },
+  "keywords": [
+    "prometheus",
+    "node-exporter",
+    "monitoring",
+    "proxy",
+    "ssh"
+  ],
+  "author": "Simon Oulevay <npm@alphahydrae.ch>",
+  "license": "MIT",
+  "scripts": {
+    "doctoc": "doctoc --github --notitle README.md && prettier --write README.md",
+    "format": "prettier --check .",
+    "format:write": "prettier --write .",
+    "test": "docker build -t alphahydrae/monitoring-proxy ."
+  },
+  "devDependencies": {
+    "doctoc": "^2.2.1",
+    "prettier": "^3.2.5"
+  },
+  "engines": {
+    "node": ">= 24.0.0"
+  }
+}
