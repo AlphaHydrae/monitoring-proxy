@@ -17,3 +17,7 @@ fi
 log "Testing configuration..."
 /usr/sbin/sshd -T
 log "Configuration is valid."
+
+for key in /etc/ssh/ssh_host_*_key.pub; do
+  log "$key: $(cat "$key")"
+done

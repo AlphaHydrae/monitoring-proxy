@@ -12,6 +12,7 @@ boundary without exposing those exporters to the outside world.
 - [Purpose](#purpose)
 - [Configuration](#configuration)
   - [SSH Server](#ssh-server)
+    - [Host keys](#host-keys)
   - [Reverse Proxy](#reverse-proxy)
   - [Prometheus](#prometheus)
 - [Security](#security)
@@ -121,6 +122,17 @@ ssh -R 20001:localhost:9100 -N monitoring-proxy.example.com
 > ```bash
 > /usr/bin/autossh -M 0 -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -R 20001:localhost:9100 -N monitoring-proxy.example.com
 > ```
+
+#### Host keys
+
+New host keys will be generated on startup, but this is not suitable for
+production since they will change every time the container restarts. You should
+generate and use your own key(s), for example at `/etc/ssh/ssh_host_ed25519_key`
+and the corresponding `.pub` paths. No new keys will be generated if at least
+one is present.
+
+Public host keys will be logged on startup (either the generated ones or the
+ones provided by you).
 
 ### Reverse Proxy
 
