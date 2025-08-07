@@ -24,10 +24,10 @@ RUN apk add --no-cache --virtual setup-dependencies ca-certificates wget && \
     addgroup -S monitoring && \
     adduser -G monitoring -S -s /sbin/nologin monitoring && \
     echo "monitoring:*" | chpasswd -e && \
-    mkdir /home/monitoring/.ssh && \
+    mkdir /etc/monitoring /home/monitoring/.ssh && \
     touch /home/monitoring/.ssh/authorized_keys && \
-    chown -R monitoring:monitoring /home/monitoring && \
-    chmod 700 /home/monitoring /home/monitoring/.ssh && \
+    chown -R monitoring:monitoring /etc/monitoring /home/monitoring && \
+    chmod 700 /etc/monitoring /home/monitoring /home/monitoring/.ssh && \
     chmod 600 /home/monitoring/.ssh/authorized_keys
 
 COPY /fs/ /

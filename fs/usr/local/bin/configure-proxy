@@ -1,0 +1,31 @@
+#!/command/with-contenv sh
+
+log () {
+  timestamp="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+  echo "[$timestamp] [proxy] $@"
+}
+
+if [ -f /etc/monitoring/targets ] && [ ! -f /etc/nginx/cond.d/monitoring-proxy.conf ]; then
+  OLD_IFS="$IFS"
+
+  IFS=$'\n'
+  for target in $(cat /etc/monitoring/targets); do
+    target_address=$(echo "$target" | cut -d ' ' -f 1)
+    target_path=$(echo "$target" | cut -d ' ' -f 2 | sed 's|^/||' | sed 's|/$||')
+    log "Proxying $target_path to $target_address"
+    cat << EOF >> /etc/nginx/conf.d/monitoring-proxy.conf
+location /${target_path}/ {
+  proxy_pass http://${target_address}/;
+  proxy_set_header Host \$host;
+  proxy_set_header X-Real-IP \$remote_addr;
+  proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+  proxy_set_header X-Forwarded-Proto \$scheme;
+}
+EOF
+  done
+
+  IFS="$OLD_IFS"
+
+  log "Generated proxy configuration follows"
+  cat /etc/nginx/conf.d/monitoring-proxy.conf
+fi

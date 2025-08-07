@@ -149,6 +149,15 @@ location /external-host-2/ {
 }
 ```
 
+You can also use the `/etc/monitoring/targets` file instead, which is a shortcut
+to generate such a configuration. The following example would generate the same
+configuration as shown above:
+
+```
+localhost:20001 external-host-1
+localhost:20002 external-host-2
+```
+
 ### Prometheus
 
 Here's what your Prometheus scrape configs could look like for these external
