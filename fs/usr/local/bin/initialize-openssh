@@ -1,14 +1,18 @@
-#!/bin/sh
+#!/command/with-contenv sh
 
 log () {
   timestamp="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
   echo "[$timestamp] [ssh] $@"
 }
 
-log "Generating host keys..."
-/usr/bin/ssh-keygen -A
-log "Generated host keys:"
-ls -1 /etc/ssh/ssh_host_*
+if ls -1 /etc/ssh/ssh_host_* 2>/dev/null; then
+  log "Host keys already exist, skipping generation."
+else
+  log "Generating host keys..."
+  /usr/bin/ssh-keygen -A
+  log "Generated host keys:"
+  ls -1 /etc/ssh/ssh_host_*
+fi
 
 log "Testing configuration..."
 /usr/sbin/sshd -T
